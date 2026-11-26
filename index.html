@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#050510"><title>AETHER AI</title>
+<style>
+:root{--bg:#050510;--panel:#101027;--panel2:#171632;--text:#f7f7ff;--muted:#aaa9c8;--cyan:#23d9ff;--purple:#8c32ff;--pink:#d52cff;--line:#30265e}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:15px Inter,system-ui,Arial;min-height:100vh;overflow-x:hidden}
+body:before{content:"";position:fixed;inset:0;pointer-events:none;background:radial-gradient(ellipse at 15% 5%,#12365b66,transparent 42%),radial-gradient(ellipse at 90% 85%,#4a0a8560,transparent 40%);z-index:-2}
+#wallpaper{position:fixed;inset:0;width:100%;height:100%;object-fit:cover;opacity:.18;z-index:-1;display:none}
+#wallpaper.show{display:block}#wallpaperTint{position:fixed;inset:0;background:#050510aa;z-index:-1;pointer-events:none}
+.app{max-width:920px;margin:auto;min-height:100dvh;display:flex;flex-direction:column;padding:0 16px}
+header{height:76px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #28204c;position:sticky;top:0;background:#070714eF;backdrop-filter:blur(16px);z-index:5}
+.brand{display:flex;align-items:center;gap:12px}.logo{width:45px;height:45px;border-radius:14px;display:grid;place-items:center;font-size:28px;font-weight:900;background:linear-gradient(135deg,#10cfff,#6734ff 65%,#d52cff);color:white;box-shadow:0 0 24px #543dff77}.brand b{font-size:21px;letter-spacing:1px}.brand small{display:block;color:var(--muted);font-size:11px;margin-top:2px}
+button,.btn{border:1px solid var(--line);color:white;background:#17152f;border-radius:13px;padding:11px 14px;font:inherit;cursor:pointer;transition:.18s}button:hover,.btn:hover{border-color:var(--cyan);filter:brightness(1.15)}button:disabled{opacity:.5;cursor:not-allowed}.iconbtn{font-size:21px;width:44px;height:44px;padding:0}.primary{background:linear-gradient(100deg,#6827ff,#a326e9);border:0;box-shadow:0 5px 22px #7228ff55}.secondary{background:#101027}.muted{color:var(--muted)}.tiny{font-size:12px}.page{display:none;flex:1;min-height:0}.page.active{display:flex;flex-direction:column}
+#chatPage{padding:24px 0 14px}.welcome{text-align:center;margin:auto 0 25px}.biglogo{font-size:76px;line-height:1.2;font-weight:900;letter-spacing:-5px;background:linear-gradient(110deg,#24dfff,#fff 48%,#a43dff);color:transparent;background-clip:text;filter:drop-shadow(0 0 20px #673cff66)}.welcome h1{font-size:27px;margin:12px 0 6px}.welcome p{color:#c0bfdc;margin:0}.spark{color:#a536ff;font-size:28px;margin:20px}
+.chatlog{display:flex;flex-direction:column;gap:14px;padding:8px 0 20px;overflow:auto;max-height:62dvh}.bubble{max-width:88%;padding:14px 16px;border-radius:18px;line-height:1.55;white-space:pre-wrap;overflow-wrap:anywhere}.user{align-self:flex-end;background:linear-gradient(120deg,#4820a5,#263c91);border:1px solid #7354dc}.assistant{align-self:flex-start;background:#111127;border:1px solid #2d2852}.bubble pre{white-space:pre-wrap;overflow:auto;background:#070711;padding:12px;border-radius:10px}.bubble a{color:#5de7ff}.composer{display:flex;gap:9px;align-items:end;padding:10px;background:#100d26ed;border:1px solid #5930a0;border-radius:24px;box-shadow:0 0 25px #4c17a933;margin-top:auto}.composer textarea{flex:1;resize:none;max-height:130px;min-height:42px;border:0;outline:0;background:transparent;color:white;font:inherit;padding:10px}.send{width:49px;height:49px;border-radius:50%;font-size:20px;padding:0}.filelabel{font-size:22px;padding:8px;cursor:pointer}.filelabel input{display:none}
+.nav{display:flex;gap:8px;padding:12px 0 max(12px,env(safe-area-inset-bottom));border-top:1px solid #29204d;margin-top:12px}.nav button{flex:1;background:transparent;border:0;color:#a9a5c8;font-size:12px;padding:8px 4px}.nav button.active{color:#c65aff;text-shadow:0 0 12px #a32cff}.nav span{display:block;font-size:20px;margin-bottom:3px}
+#settingsPage{padding:22px 0;gap:13px}.sectiontitle{font-size:24px;margin:0 0 2px}.sub{color:var(--muted);margin:0 0 8px;font-size:13px}.group{background:#101027d9;border:1px solid #29234d;border-radius:17px;padding:15px}.group h3{margin:0 0 12px;font-size:15px}.settingrow{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:11px 0;border-top:1px solid #292544}.settingrow:first-of-type{border-top:0}.settingrow strong{display:block}.settingrow small{display:block;color:var(--muted);margin-top:3px;font-size:12px}.settingrow select,.settingrow input[type=text],.settingrow input[type=password],.settingrow input[type=url],.settingrow input[type=number]{max-width:54%;min-width:120px;background:#09091a;color:white;border:1px solid #39305e;border-radius:10px;padding:10px;font:inherit}
+input[type=checkbox]{accent-color:#9b3cff;width:20px;height:20px}input[type=file]{max-width:100%;color:var(--muted)}.modegrid{display:grid;grid-template-columns:repeat(2,1fr);gap:9px}.mode{padding:13px;text-align:left;min-height:85px}.mode.selected{border-color:#9c43ff;background:linear-gradient(130deg,#35116c,#11234c);box-shadow:0 0 16px #752cff44}.mode b{display:block;margin:6px 0}.mode small{color:#b8b4d7}.linkrow{display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-top:1px solid #292544}.linkrow a{color:#72dfff;text-decoration:none}.notice{font-size:12px;line-height:1.5;color:#c4c1dc;background:#17142f;padding:12px;border-radius:12px}
+#historyPage{padding:24px 0}.historyitem{padding:14px;border:1px solid var(--line);border-radius:13px;margin:8px 0;background:#101027;cursor:pointer}
+#modelsPage{padding:22px 0;gap:12px}.model{padding:14px;border:1px solid var(--line);border-radius:14px;background:#101027}.model p{color:var(--muted);font-size:12px;margin:6px 0}
+.modal{position:fixed;inset:0;background:#000b;display:none;align-items:center;justify-content:center;padding:18px;z-index:20}.modal.open{display:flex}.modalbox{max-width:480px;width:100%;background:#111127;border:1px solid #7138b5;border-radius:18px;padding:20px}.modalbox h2{margin-top:0}.modalbox input{width:100%;padding:12px;background:#080817;border:1px solid var(--line);border-radius:10px;color:white;margin:6px 0 12px}.toast{position:fixed;bottom:95px;left:50%;transform:translateX(-50%);background:#292044;padding:10px 16px;border-radius:20px;display:none;z-index:30}
+@media(min-width:700px){.app{padding:0 28px}.chatlog{max-height:68dvh}.welcome{margin-top:40px}.modegrid{grid-template-columns:repeat(3,1fr)}}
+</style></head>
+<body>
+<video id="wallpaper" autoplay muted loop playsinline></video><div id="wallpaperTint"></div>
+<div class="app">
+<header><div class="brand"><div class="logo">A</div><div><b>AETHER <span style="color:#b34aff">AI</span></b><small>One AI. Endless Possibilities.</small></div></div><button class="iconbtn" id="headSettings" aria-label="Pengaturan">⚙</button></header>
+<main id="chatPage" class="page active">
+<div class="welcome" id="welcome"><div class="biglogo">A</div><h1>AETHER AI</h1><p>Halo! 👋<br>Ada yang bisa saya bantu?</p><div class="spark">✦ ━━━━━━━━━ ✦</div><div class="tiny muted" id="currentMode">Mode: General AI</div></div>
+<div class="chatlog" id="chatlog" aria-live="polite"></div>
+<div class="composer"><label class="filelabel" title="Lampirkan file">📎<input type="file" id="attach" multiple></label><textarea id="message" rows="1" placeholder="Ketik pesan Anda di sini..."></textarea><button class="primary send" id="send">➤</button></div>
+<div class="tiny muted" style="text-align:center;margin-top:8px">Chat AI terhubung melalui server AETHER AI. Jangan kirim data rahasia.</div>
+</main>
+<main id="settingsPage" class="page">
+<div><h1 class="sectiontitle">Pengaturan AETHER AI</h1><p class="sub">Atur cara kerja dan tampilan AETHER AI.</p></div>
+<section class="group"><h3>✦ Mode & Preset</h3><div class="modegrid" id="modegrid">
+<button class="mode selected" data-mode="General AI">🌐<b>General AI</b><small>Obrolan dan pengetahuan umum</small></button>
+<button class="mode" data-mode="Coding">⌨️<b>Coding</b><small>Menulis dan memperbaiki kode</small></button>
+<button class="mode" data-mode="Game Developer">🎮<b>Game Developer</b><small>Game 2D dan 3D</small></button>
+<button class="mode" data-mode="App Builder">📱<b>App Builder</b><small>Aplikasi dan website</small></button>
+<button class="mode" data-mode="Animation">🎬<b>Animation</b><small>Storyboard dan animasi</small></button>
+<button class="mode" data-mode="Custom Mode">🛠️<b>Custom Mode</b><small>Instruksi sesuai kebutuhan</small></button>
+</div><div style="margin-top:12px"><label class="tiny muted">Instruksi Custom Mode</label><input id="customPrompt" type="text" placeholder="Contoh: jawab sebagai senior developer..." style="width:100%;padding:11px;background:#09091a;color:white;border:1px solid var(--line);border-radius:10px;margin-top:6px"></div></section>
+<section class="group"><h3>🤖 Pilihan Model AI</h3>
+<div class="settingrow"><div><strong>Jalur AI</strong><small>Otomatis pindah provider jika gagal</small></div><select id="model"><option value="auto">Auto — Gemini → Groq → OpenRouter</option><option value="gemini">Prioritaskan Gemini</option><option value="groq">Prioritaskan Groq</option><option value="openrouter">Prioritaskan OpenRouter</option></select></div>
+<div class="settingrow"><div><strong>Status koneksi</strong><small>Server AI mengelola koneksi secara aman</small></div><span id="connectionStatus" class="tiny muted">Memeriksa…</span></div>
+<button class="primary" id="testAI">Tes koneksi AI</button>
+<p class="notice" style="margin-bottom:0">Pengguna tidak perlu memasukkan API key. Developer memasang satu atau lebih API key Gemini, Groq, dan OpenRouter di environment server. Mode Auto mencoba provider yang tersedia secara berurutan. Kuota dan biaya mengikuti aturan tiap penyedia.</p>
+</section>
+<section class="group"><h3>🎨 Tema & Latar Belakang</h3>
+<div class="settingrow"><div><strong>Tema</strong><small>Tampilan aplikasi</small></div><select id="theme"><option value="dark">Gelap neon</option><option value="midnight">Midnight blue</option></select></div>
+<div class="settingrow"><div><strong>Foto latar belakang</strong><small>Pilih gambar dari perangkat</small></div><input id="photoBg" type="file" accept="image/*"></div>
+<div class="settingrow"><div><strong>Video latar belakang</strong><small>MP4 / WebM dari perangkat</small></div><input id="videoBg" type="file" accept="video/mp4,video/webm,video/*"></div>
+<button id="clearBg" class="secondary">Hapus latar belakang</button>
+</section>
+<section class="group"><h3>🎵 Musik MP3</h3><div class="settingrow"><div><strong>Musik teman coding / curhat</strong><small>Pilih file MP3 dari perangkat</small></div><input id="musicFile" type="file" accept="audio/mpeg,audio/mp3,audio/*"></div>
+<div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><button id="playMusic" class="primary">▶ Putar</button><button id="pauseMusic">Ⅱ Jeda</button><button id="stopMusic">■ Stop</button><label class="tiny muted">Volume <input id="volume" type="range" min="0" max="1" step=".05" value=".6"></label></div><audio id="audio" loop></audio><p class="tiny muted" id="musicStatus">Belum ada musik dipilih.</p></section>
+<section class="group"><h3>🌏 Bahasa & Preferensi</h3><div class="settingrow"><div><strong>Bahasa antarmuka</strong><small>Bahasa aplikasi</small></div><select id="language"><option>Indonesia</option><option>English</option></select></div><div class="settingrow"><div><strong>Simpan riwayat chat</strong><small>Riwayat disimpan lokal di browser</small></div><input type="checkbox" id="saveHistory" checked></div><button id="clearHistory">Hapus semua riwayat</button></section>
+<section class="group"><h3>ℹ️ Tentang & Dukungan</h3>
+<div class="linkrow"><span>Info AETHER AI</span><a href="https://whatsapp.com/channel/0029Vb8xiLeBPzjQbyEehv32" target="_blank" rel="noopener">Buka kanal ↗</a></div>
+<div class="linkrow"><span>Akun TikTok Dev</span><a href="https://www.tiktok.com/@yanz.mobi84?_r=1&_t=ZS-9BgPMLjjr64" target="_blank" rel="noopener">Kunjungi ↗</a></div>
+<div class="linkrow"><span>Rating aplikasi</span><button id="rate">Beri rating ★</button></div>
+<div class="linkrow"><span>Support Dev</span><a href="https://sociabuzz.com/yanznmobi/tribe" target="_blank" rel="noopener">Dukung developer ↗</a></div>
+<div class="tiny muted">AETHER AI • One AI. Endless Possibilities.</div></section>
+</main>
+<main id="historyPage" class="page"><h1 class="sectiontitle">Riwayat Chat</h1><p class="sub">Percakapan yang tersimpan di perangkat ini.</p><div id="historyList"></div></main>
+<nav class="nav"><button class="active" data-page="chatPage"><span>⌂</span>Beranda</button><button data-page="settingsPage"><span>⚙</span>Pengaturan</button><button data-page="historyPage"><span>◷</span>Riwayat</button></nav>
+</div>
+<div class="modal" id="ratingModal"><div class="modalbox"><h2>Beri rating AETHER AI</h2><p class="muted">Seberapa suka kamu dengan aplikasi ini?</p><div id="stars" style="font-size:35px;letter-spacing:8px">☆☆☆☆☆</div><button class="primary" id="submitRating" style="margin-top:18px">Simpan rating</button><button id="closeRating" style="margin-left:8px">Tutup</button></div></div>
+<div class="toast" id="toast"></div>
+<script>
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+let mode='General AI', attached=[], rating=0, musicUrl='',bgUrl='';
+function toast(t){let el=$('#toast');el.textContent=t;el.style.display='block';setTimeout(()=>el.style.display='none',2600)}
+function page(id){$$('.page').forEach(p=>p.classList.toggle('active',p.id===id));$$('.nav button').forEach(b=>b.classList.toggle('active',b.dataset.page===id));if(id==='historyPage')renderHistory()}
+$$('.nav button').forEach(b=>b.onclick=()=>page(b.dataset.page));$('#headSettings').onclick=()=>page('settingsPage');
+$$('.mode').forEach(b=>b.onclick=()=>{$$('.mode').forEach(x=>x.classList.remove('selected'));b.classList.add('selected');mode=b.dataset.mode;$('#currentMode').textContent='Mode: '+mode;toast('Mode '+mode+' dipilih')});
+function safe(s){return s.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
+function addBubble(text,who){let d=document.createElement('div');d.className='bubble '+who;d.textContent=text;$('#chatlog').appendChild(d);$('#chatlog').scrollTop=$('#chatlog').scrollHeight;$('#welcome').style.display='none';return d}
+function getHistory(){try{return JSON.parse(localStorage.getItem('aether_history')||'[]')}catch{return []}}
+function saveHistory(){if(!$('#saveHistory').checked)return;localStorage.setItem('aether_history',JSON.stringify(getHistory().slice(-80)))}
+function storeTurn(q,a){let h=getHistory();h.push({q,a,time:new Date().toLocaleString()});localStorage.setItem('aether_history',JSON.stringify(h.slice(-80)))}
+function renderHistory(){let h=getHistory();$('#historyList').innerHTML=h.length?'':'<p class="muted">Belum ada riwayat percakapan.</p>';h.slice().reverse().forEach((x,i)=>{let d=document.createElement('div');d.className='historyitem';d.innerHTML='<b>'+safe(x.q.slice(0,100))+'</b><div class="tiny muted">'+safe(x.time)+'</div><div class="tiny muted">'+safe(x.a.slice(0,130))+'</div>';d.onclick=()=>{page('chatPage');$('#chatlog').innerHTML='';addBubble(x.q,'user');addBubble(x.a,'assistant');$('#welcome').style.display='none'};$('#historyList').appendChild(d)})}
+function selectedProvider(){return $('#model').value}
+async function checkServer(){try{let r=await fetch('/api/health');let j=await r.json();$('#connectionStatus').textContent=j.ready?'Siap: '+(j.providers||[]).join(', '):'Belum dikonfigurasi';$('#connectionStatus').style.color=j.ready?'#66e6a5':'#ffbd6b'}catch{$('#connectionStatus').textContent='Server belum tersedia';$('#connectionStatus').style.color='#ffbd6b'}}
+function systemPrompt(){let base='Kamu adalah AETHER AI, asisten AI yang membantu dengan akurat, ramah, dan jujur. Jawab dalam bahasa Indonesia kecuali diminta lain. Mode aktif: '+mode+'. ';if(mode==='Coding')base+='Bertindak sebagai software engineer senior. Berikan kode lengkap, jelaskan file dan cara menjalankan, jangan mengaku sudah menjalankan kode jika belum.';if(mode==='Game Developer')base+='Bantu membuat game 2D dan 3D, mekanik, desain level, aset placeholder, dan kode sesuai engine yang diminta.';if(mode==='App Builder')base+='Bantu merancang dan membangun aplikasi/website dengan kode yang dapat dijalankan dan langkah implementasi.';if(mode==='Animation')base+='Bantu membuat naskah, storyboard, shot list, gerakan karakter, dan pipeline animasi.';if(mode==='Custom Mode')base+=$('#customPrompt').value;return base}
+async function callAI(messages){
+ const r=await fetch('/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({provider:selectedProvider(),model:'auto',messages})});
+ let j={};try{j=await r.json()}catch{}
+ if(!r.ok)throw Error(j.error||'Server AI gagal ('+r.status+'). Pastikan backend AETHER AI sudah dipasang dan API key developer tersedia.');
+ return (j.reply||'Model tidak mengembalikan teks.')+(j.providerLabel?'\n\n— '+j.providerLabel+' · '+(j.model||''):'');
+}
+let conversation=[];
+async function send(){let q=$('#message').value.trim();if(!q&&!attached.length)return;$('#message').value='';let extra=q;if(attached.length)extra+='\n\nFile dipilih: '+attached.map(f=>f.name).join(', ')+'. Upload dan pembacaan file belum tersedia di versi ini.';attached=[];$('#attach').value='';addBubble(extra,'user');conversation.push({role:'user',content:extra});let wait=addBubble('AETHER AI sedang berpikir…','assistant');$('#send').disabled=true;
+ try{let answer=await callAI([{role:'system',content:systemPrompt()},...conversation.slice(-24)]);wait.textContent=answer;conversation.push({role:'assistant',content:answer});storeTurn(q||'[Lampiran]',answer)}
+ catch(e){wait.textContent='Koneksi AI belum berhasil: '+e.message+'\n\nPeriksa apakah backend sudah dipasang, koneksi internet, dan konfigurasi server developer. Tidak ada jawaban AI palsu yang ditampilkan.'}
+ finally{$('#send').disabled=false}
+}
+$('#send').onclick=send;$('#message').addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();send()}});$('#attach').onchange=e=>{attached=[...e.target.files];if(attached.length)toast(attached.length+' file dipilih; upload file memerlukan dukungan endpoint khusus')};
+$('#testAI').onclick=async()=>{try{toast('Menguji koneksi…');let a=await callAI([{role:'user',content:'Balas hanya: Koneksi AETHER AI berhasil.'}]);toast(a.slice(0,90));checkServer()}catch(e){toast(e.message);checkServer()}};
+$('#clearHistory').onclick=()=>{if(confirm('Hapus semua riwayat chat?')){localStorage.removeItem('aether_history');renderHistory();toast('Riwayat dihapus')}};
+$('#rate').onclick=()=>$('#ratingModal').classList.add('open');$('#closeRating').onclick=()=>$('#ratingModal').classList.remove('open');
+$('#stars').onclick=e=>{let rect=$('#stars').getBoundingClientRect();rating=Math.max(1,Math.min(5,Math.ceil((e.clientX-rect.left)/((rect.width)/5))));$('#stars').textContent='★'.repeat(rating)+'☆'.repeat(5-rating)};
+$('#submitRating').onclick=()=>{if(!rating){toast('Pilih bintang terlebih dahulu');return}localStorage.setItem('aether_rating',rating);$('#ratingModal').classList.remove('open');toast('Terima kasih atas rating '+rating+' bintang!')};
+$('#photoBg').onchange=e=>{let f=e.target.files[0];if(!f)return;if(bgUrl)URL.revokeObjectURL(bgUrl);bgUrl=URL.createObjectURL(f);$('#wallpaper').pause();$('#wallpaper').removeAttribute('src');$('#wallpaper').style.display='none';document.body.style.backgroundImage='url('+bgUrl+')';document.body.style.backgroundSize='cover';document.body.style.backgroundAttachment='fixed';toast('Foto latar belakang diterapkan')};
+$('#videoBg').onchange=e=>{let f=e.target.files[0];if(!f)return;if(bgUrl)URL.revokeObjectURL(bgUrl);bgUrl=URL.createObjectURL(f);document.body.style.backgroundImage='none';$('#wallpaper').src=bgUrl;$('#wallpaper').classList.add('show');$('#wallpaper').play().catch(()=>{});toast('Video latar belakang diterapkan')};
+$('#clearBg').onclick=()=>{if(bgUrl)URL.revokeObjectURL(bgUrl);bgUrl='';$('#wallpaper').pause();$('#wallpaper').removeAttribute('src');$('#wallpaper').classList.remove('show');document.body.style.backgroundImage='';toast('Latar belakang direset')};
+$('#musicFile').onchange=e=>{let f=e.target.files[0];if(!f)return;if(musicUrl)URL.revokeObjectURL(musicUrl);musicUrl=URL.createObjectURL(f);$('#audio').src=musicUrl;$('#musicStatus').textContent='Dipilih: '+f.name;toast('Musik siap diputar')};
+$('#playMusic').onclick=()=>{if(!musicUrl){toast('Pilih file MP3 terlebih dahulu');return}$('#audio').play().then(()=>toast('Musik diputar')).catch(()=>toast('Tidak dapat memutar audio'))};$('#pauseMusic').onclick=()=>$('#audio').pause();$('#stopMusic').onclick=()=>{$('#audio').pause();$('#audio').currentTime=0};$('#volume').oninput=e=>$('#audio').volume=Number(e.target.value);
+$('#theme').onchange=e=>{if(e.target.value==='midnight'){document.documentElement.style.setProperty('--bg','#06101e');document.body.style.backgroundColor='#06101e'}else{document.documentElement.style.setProperty('--bg','#050510');document.body.style.backgroundColor='#050510'}};
+$('#audio').volume=.6;checkServer();
+</script></body></html>
